@@ -7,7 +7,16 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    #@movies = Movie.all
+    @all_ratings = Movie.all_ratings()
+    dict = params["ratings"]
+    if dict.nil?
+      @ratings_to_show = []
+    else
+      @ratings_to_show = dict.keys
+    end
+    @movies = Movie.with_ratings(@ratings_to_show)
+    
   end
 
   def new
@@ -38,8 +47,7 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
   
-  def all_ratings
-
+  
   private
   # Making "internal" methods private is not required, but is a common practice.
   # This helps make clear which methods respond to requests, and which ones do not.
