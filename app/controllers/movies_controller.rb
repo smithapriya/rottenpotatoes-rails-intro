@@ -9,13 +9,24 @@ class MoviesController < ApplicationController
   def index
     #@movies = Movie.all
     @all_ratings = Movie.all_ratings()
+    @sort = params[:sort] || session[:sort]
     dict = params["ratings"]
+    puts dict.class
     if dict.nil?
       @ratings_to_show = []
-    else
+    elsif dict.class == ActionController::Parameters || dict.class == Hash
       @ratings_to_show = dict.keys
+      puts @ratings_to_show
+    else
+      @ratings_to_show = dict
     end
+    puts @ratings_to_show
     @movies = Movie.with_ratings(@ratings_to_show)
+    
+    if(@sort)
+      session[:sort] = @sort
+      @movies = @movies.order(@sort.to_sym)
+    end
     
   end
 
