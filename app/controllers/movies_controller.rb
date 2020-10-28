@@ -10,6 +10,7 @@ class MoviesController < ApplicationController
     #@movies = Movie.all
     @all_ratings = Movie.all_ratings()
     @sort = params[:sort] || session[:sort]
+    @ratings = params[:ratings] || session[:ratings]
     dict = params["ratings"]
     puts dict.class
     if dict.nil?
@@ -27,6 +28,14 @@ class MoviesController < ApplicationController
       session[:sort] = @sort
       @movies = @movies.order(@sort.to_sym)
     end
+   
+    
+    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+      session[:sort] = @sort
+      session[:ratings] = @ratings
+      redirect_to(sort: @sort, ratings: @ratings) and return
+    end
+    
     
   end
 
